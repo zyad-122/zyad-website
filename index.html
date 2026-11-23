@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>مشواري - مواصلاتك أسهل</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f1f5f9;
+    color: #172554;
+}
+
+header {
+    background: #102b46;
+    color: white;
+    padding: 22px;
+    text-align: center;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 30px;
+}
+
+header p {
+    color: #cbd5e1;
+}
+
+.container {
+    max-width: 500px;
+    margin: 35px auto;
+    padding: 20px;
+}
+
+.card {
+    background: white;
+    padding: 25px;
+    border-radius: 18px;
+    box-shadow: 0 5px 20px #00000010;
+}
+
+h2 {
+    margin-top: 0;
+    color: #102b46;
+}
+
+.location {
+    background: #e8f7f4;
+    padding: 15px;
+    border-radius: 12px;
+    margin: 15px 0;
+    color: #087f70;
+}
+
+input {
+    width: 100%;
+    padding: 16px;
+    border: 1px solid #cbd5e1;
+    border-radius: 10px;
+    margin: 12px 0;
+    font-size: 16px;
+}
+
+button {
+    width: 100%;
+    padding: 16px;
+    background: #079b87;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 17px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+button:hover {
+    background: #067968;
+}
+
+footer {
+    text-align: center;
+    color: #64748b;
+    padding: 25px;
+}
+</style>
+</head>
+<link rel="stylesheet"
+href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<body>
+
+<header>
+    <h1>🚍 مشواري</h1>
+    <p>هنوصلك لوجهتك بأفضل طريق</p>
+</header>
+
+<div class="container">
+    <div class="card">
+
+        <h2>يلا نبدأ مشوارك!</h2>
+
+        <div class="location">
+            📍 موقعك الحالي:
+            <p id="location">اضغط لتحديد موقعك</p>
+            <button onclick="getLocation()">
+                حدد موقعي الحالي
+            </button>
+        </div>
+<div id="map"
+     style="height: 350px; width: 100%;
+     border-radius: 15px; margin: 20px 0;">
+</div>
+        <h3>🚩 رايح فين؟</h3>
+
+        <input
+            type="text"
+            id="destination"
+            placeholder="اكتب المكان اللي عاوز تروحه"
+        >
+
+        <button onclick="searchTrip()">
+            اعرض المواصلات 🚍
+        </button>
+
+        <p id="result"></p>
+
+    </div>
+</div>
+
+<footer>
+    مشواري © 2026 - طريقك أسهل
+</footer>
+const map = L.map('map').setView([30.0444, 31.2357], 11);
+
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; OpenStreetMap'
+}).addTo(map);
+<script>
+function getLocation() {
+    const locationText = document.getElementById("location");
+
+    if (!navigator.geolocation) {
+        locationText.innerText = "المتصفح لا يدعم تحديد الموقع";
+        return;
+    }
+
+    locationText.innerText = "جاري تحديد موقعك...";
+
+    navigator.geolocation.getCurrentPosition(
+        function(position) {
+            locationText.innerText =
+                "تم تحديد موقعك بنجاح 📍";
+
+            window.myLatitude = position.coords.latitude;
+        
+           
+           window.myLongitude = position.coords.longitude;
+           map.setView([
+    window.myLatitude,
+    window.myLongitude
+], 15);
+
+L.marker([
+    window.myLatitude,
+    window.myLongitude
+])
+.addTo(map)
+.bindPopup("أنت هنا 📍")
+.openPopup();
+        }
+
+        function() {
+            locationText.innerText =
+                "لم نتمكن من تحديد موقعك، تأكد من السماح بالوصول للموقع";
+        }
+    );
+}
+
+function searchTrip() {
+    const destination =
+        document.getElementById("destination").value;
+
+    if (destination.trim() === "") {
+        alert("اكتب المكان اللي عاوز تروحه الأول");
+        return;
+    }
+
+    alert("وجهتك هي: " + destination +
+          "\nهنجهزلك خطوط المواصلات في المرحلة القادمة 🚍");
+}
+</script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+</body>
+</html>
